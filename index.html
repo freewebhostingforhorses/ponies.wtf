@@ -18,8 +18,10 @@
 
 	#image {
 		border: 4px solid black;
+		cursor: pointer; 
+		position: absolute;
 	}
-	
+
 	#text {
 		text-align: center;
 		margin-top: 10px;
@@ -30,5 +32,59 @@
 
 <body>
 	<img id="image" src="./1701071010071775.png">
-	<p id="text">Hello.</p>
 </body>
+
+
+<script>
+
+var strength = 0;
+var timer;
+var isHolding = false;
+var xo, yo;
+
+image.setAttribute("draggable", false);
+
+function getRandomRange(min, max) {
+  return Math.random() * (max - min) + min;
+}
+
+function check() {
+	if (isHolding) {
+		let randomX = getRandomRange(-1, 1) * strength
+		let randomY = getRandomRange(-1, 1) * strength
+		
+		var image = document.getElementById('image');
+		var x = image.getBoundingClientRect().x;
+		var y = image.getBoundingClientRect().y;
+		image.style.left = x + randomX + 'px';
+		image.style.top = y + randomY + 'px';
+		
+		if (strength < 4)
+			strength += 0.15
+		
+		image.src = "./scrunch.png"
+		
+		setTimeout(check, 10);
+	}
+}
+
+image.addEventListener('mousedown', function(event) {
+	xo = image.getBoundingClientRect().x;
+	yo = image.getBoundingClientRect().y;
+	timer = setTimeout(function() {
+		isHolding = true;
+		check();
+	}, 100);
+});
+
+
+document.addEventListener('mouseup', function() {
+	clearTimeout(timer);
+	isHolding = false;
+	strength = 0;
+	image.src = "./1701071010071775.png"
+	image.style.left = xo + 'px';
+	image.style.top = yo + 'px';
+});
+
+</script>
